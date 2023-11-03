@@ -5,6 +5,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox'
 Plug 'folke/tokyonight.nvim'
 Plug 'marko-cerovac/material.nvim'
+Plug 'Mofiqul/vscode.nvim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
@@ -33,6 +34,11 @@ Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'dccsillag/magma-nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'sbdchd/neoformat'
 Plug 'Pocco81/auto-save.nvim'
+Plug 'norcalli/nvim-colorizer.lua'
+Plug 'RRethy/vim-illuminate'
+" file explorer
+Plug 'nvim-tree/nvim-tree.lua'
+Plug 'nvim-tree/nvim-web-devicons'
 call plug#end()
 
 set number
@@ -62,14 +68,19 @@ nnoremap <silent> <C-H> :History<CR>
 autocmd FileType python map <buffer> <F5> :w<CR>:!python3 %<CR>
 autocmd FileType python imap <buffer> <F5> <esc>:w<CR>:!python3 %<CR>
 set background=dark    " Setting dark mode
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
 
 let g:gruvbox_italic = 1
 let g:gruvbox_underline = 1
 let g:gruvbox_contrast_dark = 'medium'
 let g:gruvbox_number_column = 'bg0'
 
-let g:airline_theme='durant'
+let g:airline_theme='dark'
+
+" Initiate Lua
+lua require'init'
 
 colorscheme tokyonight-night
-
-lua require'init'

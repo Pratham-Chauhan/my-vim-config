@@ -1,3 +1,12 @@
+-- disable netrw at the very start of your init.lua
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+vim.opt.termguicolors = true
+
+require("nvim-tree").setup()
+require "colorizer".setup()
+
 require("nvim-treesitter.install").prefer_git = true
 require "nvim-treesitter.configs".setup {
     highlight = {
@@ -61,9 +70,6 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 lspconfig.jedi_language_server.setup {capabilities = capabilities}
 
-
-
-
 vim.opt.list = true
 -- vim.opt.listchars:append "space:⋅"
 
@@ -71,13 +77,12 @@ require("indent_blankline").setup {
     space_char_blankline = " ",
     show_current_context = true,
     show_current_context_start = true,
-    show_end_of_line = false,
+    show_end_of_line = false
 }
 
-require("auto-save").setup{}
+require("auto-save").setup {}
 
-
-vim.o.foldcolumn = "1" -- '0' is not bad
+vim.o.foldcolumn = "3" -- '0' is not bad
 vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
@@ -89,13 +94,31 @@ vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
 -- Option 3: treesitter as a main provider instead
 -- Only depend on `nvim-treesitter/queries/filetype/folds.scm`,
 -- performance and stability are better than `foldmethod=nvim_treesitter#foldexpr()`
+
 require("ufo").setup(
     {
+        open_fold_hl_timeout = 150,
+        close_fold_kinds = {"imports", "comment"},
+        preview = {
+            win_config = {
+                border = {"", "─", "", "", "", "─", "", ""},
+                winhighlight = "Normal:Folded",
+                winblend = 0
+            },
+            mappings = {
+                scrollU = "<C-u>",
+                scrollD = "<C-d>",
+                jumpTop = "[",
+                jumpBot = "]"
+            }
+        },
+
         provider_selector = function(bufnr, filetype, buftype)
             return {"treesitter", "indent"}
         end
     }
 )
+require('ufo').peekFoldedLinesUnderCursor()
 
 -- FTerm.nvim
 vim.api.nvim_create_user_command("FTermOpen", require("FTerm").open, {bang = true})
@@ -156,3 +179,29 @@ vim.api.nvim_create_autocmd(
         end
     }
 )
+
+local c = require("vscode.colors").get_colors()
+require("vscode").setup(
+    {
+        -- Alternatively set style in setup
+        -- style = 'light'
+
+        -- Enable transparent background
+        transparent = false,
+        -- Enable italic comment
+        italic_comments = true,
+        -- Disable nvim-tree background color
+        disable_nvimtree_bg = true,
+        -- Override colors (see ./lua/vscode/colors.lua)
+        color_overrides = {
+            vscLineNumber = "#FFFFFF"
+        },
+        -- Override highlight groups (see ./lua/vscode/theme.lua)
+        group_overrides = {
+            -- this supports the same val table as vim.api.nvim_set_hl
+            -- use colors from this colorscheme by requiring vscode.colors!
+            Cursor = {fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true}
+        }
+    }
+)
+require("vscode").load()
